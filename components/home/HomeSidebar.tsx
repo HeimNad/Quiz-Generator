@@ -54,7 +54,7 @@ export function HomeSidebar({ activeTopic, setActiveTopic, onCloseMobileMenu }: 
           </div>
         </ScrollArea>
         <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-400 text-center">
-           v1.3.0 &copy; 2026
+           v{process.env.NEXT_PUBLIC_APP_VERSION} &copy; {process.env.NEXT_PUBLIC_BUILD_YEAR}
         </div>
     </div>
   );

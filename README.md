@@ -26,7 +26,29 @@ pnpm typecheck
 pnpm build
 ```
 
-推送到 `main` 后 GitHub Actions 会依次跑 lint、类型检查、测试和构建。部署用 `vercel --prod`。
+推送到 `main` 后：
+- GitHub Actions 依次跑 lint、类型检查、测试和构建
+- Vercel 自动部署到线上
+
+## 版本与发布
+
+版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)，唯一来源是 `package.json` 的 `version`。首页左下角显示的版本在构建时从这里读取，不要手动修改。
+
+提交信息使用 [Conventional Commits](https://www.conventionalcommits.org/zh-hans/)：
+
+| 前缀 | 含义 | 版本变化 |
+| --- | --- | --- |
+| `feat: …` | 新功能 | 1.0.0 → 1.1.0 |
+| `fix: …` | 问题修复 | 1.0.0 → 1.0.1 |
+| `perf:` / `refactor:` | 性能 / 重构 | 修订号，写进更新日志 |
+| `docs:` `test:` `ci:` `chore:` `build:` | 其他 | 不单独发版，不写进更新日志 |
+| `feat!: …` 或正文含 `BREAKING CHANGE:` | 不兼容的改动 | 1.x → 2.0.0 |
+
+发布流程（[release-please](https://github.com/googleapis/release-please)）：
+
+1. 按上面的格式提交并推送到 `main`。
+2. release-please 自动开一个 `chore(main): release x.y.z` 的 PR，里面是版本号和 `CHANGELOG.md` 的改动；之后的提交会继续累积到这个 PR 里。
+3. 想发版时合并这个 PR：自动打 `vX.Y.Z` tag、创建 GitHub Release，Vercel 部署后首页显示新版本号。
 
 ## 代码结构
 

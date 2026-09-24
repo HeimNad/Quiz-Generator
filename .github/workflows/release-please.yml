@@ -1,0 +1,24 @@
+name: Release Please
+
+# Keeps a release PR open that bumps package.json and CHANGELOG.md from
+# Conventional Commits. Merging it tags vX.Y.Z and publishes a GitHub Release.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - if: ${{ steps.release.outputs.release_created }}
+        run: echo "Released ${{ steps.release.outputs.tag_name }}"
