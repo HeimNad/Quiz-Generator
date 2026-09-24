@@ -60,6 +60,7 @@ export function QuizEditor({ presetId }: { presetId: string }) {
   const sidebar = (
     <QuizEditorSidebar
       presetName={preset.name}
+      presetNameEn={preset.nameEn}
       typeId={preset.type}
       config={config}
       onConfigChange={setConfig}

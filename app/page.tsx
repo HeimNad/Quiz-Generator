@@ -80,14 +80,17 @@ export default function Home() {
                    {filteredPresets.map(preset => (
                      <Link key={preset.id} href={`/quiz/${preset.id}`} passHref>
                         <Card className="cursor-pointer hover:border-blue-500 hover:shadow-lg transition-all group h-full flex flex-col">
-                            <CardHeader className="pb-4 flex-1">
+                            <CardHeader className="pb-4 flex-1 content-start">
                                 <div className="flex justify-between items-start mb-3">
                                     <div className="h-10 w-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
                                         <FileText className="h-5 w-5 text-blue-600 group-hover:text-white" />
                                     </div>
                                     <ArrowRight className="h-4 w-4 text-slate-300 group-hover:text-blue-500 transition-colors" />
                                 </div>
-                                <CardTitle className="text-lg group-hover:text-blue-600 transition-colors">{preset.name}</CardTitle>
+                                <div>
+                                    <CardTitle className="text-lg group-hover:text-blue-600 transition-colors">{preset.name}</CardTitle>
+                                    <p className="text-xs text-slate-400 mt-0.5">{preset.nameEn}</p>
+                                </div>
                                 <CardDescription className="line-clamp-2 mt-2 text-sm">{preset.description}</CardDescription>
                             </CardHeader>
                             <CardContent className="pt-0 mt-auto">

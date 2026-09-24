@@ -6,7 +6,10 @@ export type Category = "add-sub" | "mul-div" | "fraction-decimal" | "number-sens
 
 interface PresetOf<Id extends ProblemTypeId> {
   id: string;
+  /** Chinese name, shown large */
   name: string;
+  /** English name, shown small underneath */
+  nameEn: string;
   description: string;
   category: Category;
   type: Id;
@@ -22,7 +25,8 @@ export const PRESETS: Preset[] = [
   // ADD / SUB
   {
     id: "basic-add-sub",
-    name: "基础加减法 (Basic +/-)",
+    name: "基础加减法",
+    nameEn: "Basic Addition & Subtraction",
     description: "20以内的加减运算，适合一年级。",
     category: "add-sub",
     type: "arithmetic",
@@ -32,7 +36,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "base-ten-addition",
-    name: "十位个位加法 (Base Ten Blocks)",
+    name: "十位个位加法",
+    nameEn: "Base Ten Addition",
     description: "两位数加法，配 3D 十位棒和个位方块图示，可选是否进位。",
     category: "add-sub",
     type: "base-ten",
@@ -42,7 +47,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "base-ten-subtraction",
-    name: "十位个位减法 (Base Ten Blocks)",
+    name: "十位个位减法",
+    nameEn: "Base Ten Subtraction",
     description: "两位数减法，画出被减数的方块，划掉要减的部分，可选是否退位。",
     category: "add-sub",
     type: "base-ten",
@@ -52,7 +58,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "multi-digit",
-    name: "多位数运算 (Multi-Digit)",
+    name: "多位数运算",
+    nameEn: "Multi-Digit",
     description: "两位数、三位数的加减法。",
     category: "add-sub",
     type: "arithmetic",
@@ -64,7 +71,8 @@ export const PRESETS: Preset[] = [
   // MUL / DIV
   {
     id: "multiplication",
-    name: "乘法练习 (Multiplication)",
+    name: "乘法练习",
+    nameEn: "Multiplication",
     description: "九九乘法表及简单两位数乘法。",
     category: "mul-div",
     type: "arithmetic",
@@ -74,7 +82,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "division-basic",
-    name: "除法基础 (Basic Division)",
+    name: "除法基础",
+    nameEn: "Basic Division",
     description: "整除练习，适合三年级。",
     category: "mul-div",
     type: "arithmetic",
@@ -86,7 +95,8 @@ export const PRESETS: Preset[] = [
   // FRACTIONS & DECIMALS
   {
     id: "fractions-basic",
-    name: "分数运算 (Fractions)",
+    name: "分数运算",
+    nameEn: "Fractions",
     description: "分数的加减乘除运算。",
     category: "fraction-decimal",
     type: "fraction",
@@ -96,7 +106,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "decimal-ops",
-    name: "小数运算 (Decimals)",
+    name: "小数运算",
+    nameEn: "Decimals",
     description: "小数的加减乘除。",
     category: "fraction-decimal",
     type: "arithmetic",
@@ -114,7 +125,8 @@ export const PRESETS: Preset[] = [
   // NUMBER SENSE
   {
     id: "rounding-int",
-    name: "整数四舍五入 (Rounding)",
+    name: "整数四舍五入",
+    nameEn: "Rounding Whole Numbers",
     description: "将整数近似到十位或百位。",
     category: "number-sense",
     type: "rounding",
@@ -124,7 +136,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "rounding-dec",
-    name: "小数四舍五入 (Rounding)",
+    name: "小数四舍五入",
+    nameEn: "Rounding Decimals",
     description: "将小数近似到整数或十分位。",
     category: "number-sense",
     type: "rounding",
@@ -134,7 +147,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "counting",
-    name: "数数练习 (Counting)",
+    name: "数数练习",
+    nameEn: "Counting",
     description: "数图形、填空缺数字、顺数倒数，适合一年级。",
     category: "number-sense",
     type: "counting",
@@ -144,7 +158,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "number-words",
-    name: "英文数字 (Number Words)",
+    name: "英文数字",
+    nameEn: "Number Words",
     description: "数字写成英文单词，英文单词写成数字，如 93 → ninety-three。",
     category: "number-sense",
     type: "number-words",
@@ -154,7 +169,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "comparison",
-    name: "比大小 (Comparison)",
+    name: "比大小",
+    nameEn: "Comparison",
     description: "比较两个数字的大小 (<, >, =)。",
     category: "number-sense",
     type: "compare",
@@ -166,7 +182,8 @@ export const PRESETS: Preset[] = [
   // SPECIAL
   {
     id: "missing-number",
-    name: "填空题 (Missing Number)",
+    name: "填空题",
+    nameEn: "Missing Number",
     description: "求算式中的未知数，如 5 + ? = 12。",
     category: "add-sub",
     type: "arithmetic",
@@ -181,7 +198,8 @@ export const PRESETS: Preset[] = [
   },
   {
     id: "special-sub-hundred",
-    name: "整百减法 (Special Sub)",
+    name: "整百减法",
+    nameEn: "Subtracting from Hundreds",
     description: "如 100 - 34，专门练习借位技巧。",
     category: "add-sub",
     type: "arithmetic",
@@ -198,7 +216,8 @@ export const PRESETS: Preset[] = [
   // PERCENT
   {
     id: "percent-of-integer",
-    name: "百分数计算 (Percent)",
+    name: "百分数计算",
+    nameEn: "Percent",
     description: "整数百分之几 / 分数转百分数 / 小数转百分数",
     category: "percent",
     type: "percent",
@@ -209,7 +228,8 @@ export const PRESETS: Preset[] = [
 
   {
     id: "custom",
-    name: "自定义设置 (Custom)",
+    name: "自定义设置",
+    nameEn: "Custom",
     description: "完全自定义所有参数。",
     category: "add-sub",
     type: "arithmetic",

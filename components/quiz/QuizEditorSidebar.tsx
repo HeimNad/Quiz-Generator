@@ -15,6 +15,7 @@ import type { BaseConfig } from "@/lib/problems/types";
 
 interface QuizEditorSidebarProps {
   presetName: string;
+  presetNameEn: string;
   typeId: ProblemTypeId;
   config: BaseConfig;
   onConfigChange: (config: BaseConfig) => void;
@@ -29,6 +30,7 @@ interface QuizEditorSidebarProps {
 
 export function QuizEditorSidebar({
   presetName,
+  presetNameEn,
   typeId,
   config,
   onConfigChange,
@@ -51,7 +53,7 @@ export function QuizEditorSidebar({
         </Button>
         <div className="flex flex-col overflow-hidden">
           <span className="font-semibold truncate">{presetName}</span>
-          <span className="text-xs text-slate-500">Editor Mode</span>
+          <span className="text-xs text-slate-400 truncate">{presetNameEn}</span>
         </div>
       </div>
 
