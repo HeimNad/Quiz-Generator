@@ -2,9 +2,11 @@ import { createElement, type ComponentType } from "react";
 import type { ConfigOf, ProblemTypeId } from "@/lib/problems/registry";
 import type { BaseConfig } from "@/lib/problems/types";
 import { ArithmeticPanel } from "./ArithmeticPanel";
+import { BaseTenPanel } from "./BaseTenPanel";
 import { ComparePanel } from "./ComparePanel";
 import { CountingPanel } from "./CountingPanel";
 import { FractionPanel } from "./FractionPanel";
+import { NumberWordsPanel } from "./NumberWordsPanel";
 import { PercentPanel } from "./PercentPanel";
 import { RoundingPanel } from "./RoundingPanel";
 import type { PanelProps } from "./fields";
@@ -17,6 +19,8 @@ const PANELS: { [Id in ProblemTypeId]: ComponentType<PanelProps<ConfigOf<Id>>> }
   rounding: RoundingPanel,
   percent: PercentPanel,
   counting: CountingPanel,
+  "number-words": NumberWordsPanel,
+  "base-ten": BaseTenPanel,
 };
 
 /** Renders the settings panel of the given problem type */

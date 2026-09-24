@@ -43,6 +43,10 @@ export interface GridLayout<C, P> {
   vertical?(problem: P, config: C): VerticalSpec | null;
   /** Whether the sheet uses the taller vertical grid */
   isVertical?(config: C): boolean;
+  /** Columns per row; by default 3, or 2 when questions are long */
+  columns?(config: C): 1 | 2 | 3;
+  /** Columns in the answer key (default 3) */
+  answerColumns?(config: C): 1 | 2 | 3;
 }
 
 /** Problems printed as full-width cards with custom drawing */

@@ -31,6 +31,16 @@ export const PRESETS: Preset[] = [
     config: { operations: ["add", "subtract"], allowedOperations: ["add", "subtract"], range: { min: 0, max: 20 } },
   },
   {
+    id: "base-ten-addition",
+    name: "十位个位加法 (Base Ten Blocks)",
+    description: "两位数加法，配十位棒和个位方块图示，可选是否进位。",
+    category: "add-sub",
+    type: "base-ten",
+    defaultTitle: "Two-Digit Addition with Base Ten Blocks",
+    defaultInstructions: "Use the blocks to help you add. Write the answer in the table.",
+    config: {},
+  },
+  {
     id: "multi-digit",
     name: "多位数运算 (Multi-Digit)",
     description: "两位数、三位数的加减法。",
@@ -120,6 +130,16 @@ export const PRESETS: Preset[] = [
     type: "counting",
     defaultTitle: "Grade 1 Counting Practice",
     defaultInstructions: "Count carefully. Write the missing numbers.",
+    config: {},
+  },
+  {
+    id: "number-words",
+    name: "英文数字 (Number Words)",
+    description: "数字写成英文单词，英文单词写成数字，如 93 → ninety-three。",
+    category: "number-sense",
+    type: "number-words",
+    defaultTitle: "Numbers in Words",
+    defaultInstructions: "Write each number in words, or write the number for the words.",
     config: {},
   },
   {

@@ -1,7 +1,9 @@
 import { arithmeticType } from "./arithmetic";
+import { baseTenType } from "./base-ten";
 import { compareType } from "./compare";
 import { countingType } from "./counting";
 import { fractionType } from "./fraction";
+import { numberWordsType } from "./number-words";
 import { percentType } from "./percent";
 import { roundingType } from "./rounding";
 import type { BaseConfig, BaseProblem, ProblemType } from "./types";
@@ -18,6 +20,8 @@ export const PROBLEM_TYPES = {
   rounding: roundingType,
   percent: percentType,
   counting: countingType,
+  "number-words": numberWordsType,
+  "base-ten": baseTenType,
 };
 
 export type ProblemTypeId = keyof typeof PROBLEM_TYPES;

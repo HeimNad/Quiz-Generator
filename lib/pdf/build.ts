@@ -100,8 +100,8 @@ function renderGridSheet(
 ) {
   const vertical = layout.isVertical?.(job.config) ?? false;
   const hasLong = problems.some((p) => plainText(layout.question(p)).length > 25);
-  const cols = vertical ? 3 : hasLong ? 2 : 3;
-  // Size rows to fill the page: vertical ≤7 rows, 3 columns ≤10, 2 columns ≤15
+  const cols = layout.columns?.(job.config) ?? (vertical ? 3 : hasLong ? 2 : 3);
+  // Size rows to fill the page: vertical ≤7 rows, 3 columns ≤10, otherwise ≤15
   const rowsPerPage = vertical ? 7 : cols === 3 ? 10 : 15;
   const rowsOnPage = Math.min(Math.ceil(problems.length / cols), rowsPerPage);
   const fill = rowsOnPage > 0 ? Math.floor((PAGE_HEIGHT - SHEET_TOP - BOTTOM_MARGIN) / rowsOnPage) : 20;
@@ -181,7 +181,7 @@ function renderAnswerKey(ctx: DrawContext, job: PdfJob, problems: BaseProblem[],
   const suffix = job.batches.length > 1 ? ` (${batchIndex + 1})` : "";
   doc.text(`${job.options.title} - ANSWER KEY${suffix}`, 105 + X_OFFSET, 20, { align: "center" });
 
-  const cols = 3;
+  const cols = grid?.answerColumns?.(job.config) ?? 3;
   const rowsOnPage = Math.min(Math.ceil(problems.length / cols), 8);
   const fill = rowsOnPage > 0 ? Math.floor((PAGE_HEIGHT - ANSWER_TOP - BOTTOM_MARGIN) / rowsOnPage) : 38;
   const minHeight = vertical ? clamp(fill, 26, 38) : 16;

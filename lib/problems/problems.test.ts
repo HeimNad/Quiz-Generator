@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { Fraction } from "@/lib/fraction";
 import { createRng } from "@/lib/random";
+import { baseTenType, type BaseTenConfig } from "./base-ten";
 import { compareType } from "./compare";
 import { countingType, type CountingConfig } from "./counting";
 import { fractionType, type FractionConfig } from "./fraction";
+import { numberToWords, numberWordsType } from "./number-words";
 import { percentType } from "./percent";
 import { roundingType } from "./rounding";
 
@@ -109,5 +111,47 @@ describe("counting", () => {
   it("skips kinds the range can't fit instead of hanging", () => {
     const problems = gen({ range: { min: 1, max: 4 } });
     expect(problems.some((p) => p.kind === "missing-sequence")).toBe(false);
+  });
+});
+
+describe("number words", () => {
+  it.each([
+    [0, "zero"],
+    [14, "fourteen"],
+    [40, "forty"],
+    [93, "ninety-three"],
+    [100, "one hundred"],
+    [115, "one hundred fifteen"],
+    [999, "nine hundred ninety-nine"],
+    [1000, "one thousand"],
+    [2305, "two thousand three hundred five"],
+    [120045, "one hundred twenty thousand forty-five"],
+  ])("%i → %s", (n, words) => expect(numberToWords(n)).toBe(words));
+
+  it("answers with words or digits", () => {
+    for (const p of numberWordsType.generate({ ...numberWordsType.defaultConfig, count: 30 }, createRng(9))) {
+      expect(p.words).toBe(numberToWords(p.value));
+      expect(p.answer).toBe(p.kind === "to-words" ? p.words : String(p.value));
+      expect(p.value).toBeGreaterThanOrEqual(1);
+      expect(p.value).toBeLessThanOrEqual(100);
+    }
+  });
+});
+
+describe("base ten", () => {
+  const gen = (regrouping: BaseTenConfig["regrouping"]) =>
+    baseTenType.generate({ ...baseTenType.defaultConfig, count: 20, regrouping }, createRng(10));
+  const onesCarry = (a: number, b: number) => (a % 10) + (b % 10) >= 10;
+
+  it("keeps two-digit sums and follows the regrouping rule", () => {
+    for (const regrouping of ["without", "with"] as const) {
+      const problems = gen(regrouping);
+      expect(problems).toHaveLength(20);
+      for (const { operands: [a, b], answer } of problems) {
+        expect(Number(answer)).toBe(a + b);
+        expect(a + b).toBeLessThanOrEqual(99);
+        expect(onesCarry(a, b)).toBe(regrouping === "with");
+      }
+    }
   });
 });

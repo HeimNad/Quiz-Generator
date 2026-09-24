@@ -6,13 +6,13 @@ export type Token =
   | { t: "num"; v: string }
   | { t: "op"; v: string }
   | { t: "frac"; n: number; d: number }
-  | { t: "blank"; style: "line" | "paren"; suffix?: string }
+  | { t: "blank"; style: "line" | "paren"; suffix?: string; /** underscores in a line blank */ size?: number }
   | { t: "text"; v: string };
 
 export const num = (v: number | string): Token => ({ t: "num", v: String(v) });
 export const op = (v: string): Token => ({ t: "op", v });
 export const text = (v: string): Token => ({ t: "text", v });
-export const line = (suffix?: string): Token => ({ t: "blank", style: "line", suffix });
+export const line = (suffix?: string, size?: number): Token => ({ t: "blank", style: "line", suffix, size });
 export const paren = (): Token => ({ t: "blank", style: "paren" });
 
 /** Fraction token; whole numbers (d = 1) render as plain numbers */
@@ -29,7 +29,7 @@ export function plainText(tokens: Token[]): string {
         case "frac":
           return `${tk.n}/${tk.d}`;
         case "blank":
-          return (tk.style === "paren" ? "(      )" : "______") + (tk.suffix ?? "");
+          return (tk.style === "paren" ? "(      )" : "_".repeat(tk.size ?? 6)) + (tk.suffix ?? "");
         default:
           return tk.v;
       }
