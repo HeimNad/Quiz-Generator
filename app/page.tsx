@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PRESETS } from "@/lib/presets";
-import { Topic } from "@/lib/math-generator";
+import { PRESETS, presetTags, type Category } from "@/lib/presets";
 import {
   Card,
   CardHeader,
@@ -23,13 +22,13 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { HomeSidebar } from "@/components/home/HomeSidebar";
 
 export default function Home() {
-  const [activeTopic, setActiveTopic] = useState<Topic | 'all'>('all');
+  const [activeTopic, setActiveTopic] = useState<Category | 'all'>('all');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
     // Filter presets based on active tab
     const filteredPresets = activeTopic === 'all' 
       ? PRESETS 
-      : PRESETS.filter(p => p.topic === activeTopic);
+      : PRESETS.filter(p => p.category === activeTopic);
   
     return (
       <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden flex-col md:flex-row">
@@ -93,7 +92,7 @@ export default function Home() {
                             </CardHeader>
                             <CardContent className="pt-0 mt-auto">
                                 <div className="flex flex-wrap gap-2">
-                                    {preset.config.operations?.map(op => (
+                                    {presetTags(preset).map(op => (
                                     <Badge key={op} variant="secondary" className="text-[10px] uppercase">{op}</Badge>
                                     ))}
                                 </div>

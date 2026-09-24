@@ -1,15 +1,15 @@
-import { Topic } from "@/lib/math-generator";
+import type { Category } from "@/lib/presets";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Calculator, Hash, LayoutGrid, Percent, Divide } from "lucide-react";
+import { Calculator, Hash, LayoutGrid, Percent, Divide, type LucideIcon } from "lucide-react";
 
 interface HomeSidebarProps {
-  activeTopic: Topic | 'all';
-  setActiveTopic: (topic: Topic | 'all') => void;
+  activeTopic: Category | 'all';
+  setActiveTopic: (topic: Category | 'all') => void;
   onCloseMobileMenu?: () => void;
 }
 
-const CATEGORIES: { id: Topic | 'all', label: string, icon: any }[] = [
+const CATEGORIES: { id: Category | 'all', label: string, icon: LucideIcon }[] = [
   { id: 'all', label: '全部题型', icon: LayoutGrid },
   { id: 'add-sub', label: '加法与减法', icon: Calculator },
   { id: 'mul-div', label: '乘法与除法', icon: Divide },
@@ -20,7 +20,7 @@ const CATEGORIES: { id: Topic | 'all', label: string, icon: any }[] = [
 
 export function HomeSidebar({ activeTopic, setActiveTopic, onCloseMobileMenu }: HomeSidebarProps) {
   
-  const handleSelect = (topic: Topic | 'all') => {
+  const handleSelect = (topic: Category | 'all') => {
     setActiveTopic(topic);
     if (onCloseMobileMenu) {
       onCloseMobileMenu();

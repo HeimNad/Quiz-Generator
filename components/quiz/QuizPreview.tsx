@@ -1,7 +1,6 @@
 "use client";
 
-import { Problem } from "@/lib/math-generator";
-import { generatePDF } from "@/lib/pdf-generator";
+import { pdfBlobUrl, type PdfJob, type PdfOptions } from "@/lib/pdf/build";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -26,64 +25,50 @@ const PDFViewer = dynamic(() => import("./PDFViewer"), {
   ),
 });
 
+type Content = PdfOptions["content"];
+
 interface QuizPreviewProps {
-  problemBatches: Problem[][];
-  worksheetTitle: string;
-  worksheetInstructions: string;
-  onDownloadPDF: (content: "all" | "problems" | "answers") => void;
-  onPrintPDF: (content: "all" | "problems" | "answers") => void;
+  /** What the preview renders; a new object triggers a re-render */
+  job: PdfJob;
+  onDownload: (content: Content) => void;
+  onPrint: (content: Content) => void;
   onMobileSettingsClick?: () => void;
   showAnswers: boolean;
   setShowAnswers: (show: boolean) => void;
   showNumbers: boolean;
   setShowNumbers: (show: boolean) => void;
-  displayFormat?: "horizontal" | "vertical";
 }
 
+const CONTENT_OPTIONS: { value: Content; label: string }[] = [
+  { value: "all", label: "全部 (题目+答案)" },
+  { value: "problems", label: "仅题目" },
+  { value: "answers", label: "仅答案" },
+];
+
 export function QuizPreview({
-  problemBatches,
-  worksheetTitle,
-  worksheetInstructions,
-  onDownloadPDF,
-  onPrintPDF,
+  job,
+  onDownload,
+  onPrint,
   onMobileSettingsClick,
   showAnswers,
   setShowAnswers,
   showNumbers,
   setShowNumbers,
-  displayFormat,
 }: QuizPreviewProps) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
-    let currentPdfUrl: string | null = null;
+    let url: string | null = null;
 
     const loadPdf = async () => {
-      if (!problemBatches || problemBatches.length === 0) return;
-      
+      if (job.batches.length === 0) return;
       setIsLoading(true);
       try {
-        // 生成包含所有内容的 PDF
-        const url = await generatePDF(
-          problemBatches,
-          {
-            title: worksheetTitle,
-            description: worksheetInstructions,
-            includeAnswers: showAnswers,
-            content: "all",
-            showNumbers,
-            displayFormat,
-          },
-          "blob-url"
-        );
-        
-        if (active && typeof url === "string") {
-            setPdfUrl(url);
-            currentPdfUrl = url;
-        }
-
+        url = await pdfBlobUrl(job);
+        if (active) setPdfUrl(url);
+        else URL.revokeObjectURL(url);
       } catch (error) {
         console.error("Failed to generate PDF preview", error);
       } finally {
@@ -95,9 +80,9 @@ export function QuizPreview({
 
     return () => {
       active = false;
-      if (currentPdfUrl) URL.revokeObjectURL(currentPdfUrl);
+      if (url) URL.revokeObjectURL(url);
     };
-  }, [problemBatches, worksheetTitle, worksheetInstructions, showAnswers, showNumbers, displayFormat]);
+  }, [job]);
 
   return (
     <div className="flex-1 bg-slate-100 dark:bg-slate-950 flex flex-col h-full overflow-hidden">
@@ -152,15 +137,11 @@ export function QuizPreview({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onDownloadPDF("all")}>
-                全部 (题目+答案)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDownloadPDF("problems")}>
-                仅题目
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDownloadPDF("answers")}>
-                仅答案
-              </DropdownMenuItem>
+              {CONTENT_OPTIONS.map((o) => (
+                <DropdownMenuItem key={o.value} onClick={() => onDownload(o.value)}>
+                  {o.label}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -173,15 +154,11 @@ export function QuizPreview({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onPrintPDF("all")}>
-                全部 (题目+答案)
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onPrintPDF("problems")}>
-                仅题目
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onPrintPDF("answers")}>
-                仅答案
-              </DropdownMenuItem>
+              {CONTENT_OPTIONS.map((o) => (
+                <DropdownMenuItem key={o.value} onClick={() => onPrint(o.value)}>
+                  {o.label}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
