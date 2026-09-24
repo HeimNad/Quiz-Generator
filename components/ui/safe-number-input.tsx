@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface SafeNumberInputProps extends React.ComponentProps<typeof Input> {
   value: number;
@@ -20,11 +20,13 @@ export function SafeNumberInput({
   ...props
 }: SafeNumberInputProps) {
   const [localValue, setLocalValue] = useState(value.toString());
+  const [syncedValue, setSyncedValue] = useState(value);
 
-  // Sync with external value changes
-  useEffect(() => {
+  // Sync with external value changes (adjusting state during render, not in an effect)
+  if (value !== syncedValue) {
+    setSyncedValue(value);
     setLocalValue(value.toString());
-  }, [value]);
+  }
 
   const handleBlur = () => {
     let val = parseInt(localValue);

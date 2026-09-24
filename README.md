@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MathGen — 数学练习题生成器
 
-## Getting Started
+Generates printable math worksheets (PDF) with answer keys: arithmetic, fractions, decimals,
+rounding, comparison, percent and Grade 1 counting.
 
-First, run the development server:
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev          # http://localhost:3000
+pnpm test         # vitest: generators + a PDF build for every preset
+pnpm lint
+pnpm typecheck
+pnpm build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How it fits together
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+lib/
+  random.ts               Seedable RNG — generators never call Math.random
+  presets.ts              Home page cards: a problem type + config overrides
+  problems/
+    types.ts              ProblemType interface
+    registry.ts           PROBLEM_TYPES — every type is listed here
+    shared.ts             Ranges, dedup loop, number formatting
+    <type>/index.ts       One folder per problem type
+  pdf/
+    tokens.ts             Structured question pieces (number, fraction, operator, blank…)
+    draw.ts               Equation and 竖式 drawing
+    build.ts              Page layout: grid sheets, card sheets, answer keys
+    assets.ts             Font + logo, loaded once
+components/quiz/
+  QuizEditor.tsx          Editor state: config, generated batches, PDF actions
+  panels/                 Settings panel per problem type
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A problem type owns everything about itself:
 
-## Learn More
+- **config** — its settings, with `defaultConfig`
+- **generate(config, rng)** — returns structured problems (operands, blanks, shapes…), never
+  pre-formatted strings
+- **layout** — how the PDF prints them:
+  - `grid`: return question/answer tokens; the PDF lays them out in columns
+    (optionally 竖式 via `vertical`)
+  - `card`: full-width cards with custom drawing (e.g. counting shapes); `section` starts a new page
+    when it changes
 
-To learn more about Next.js, take a look at the following resources:
+The editor sidebar shows the shared settings (count, copies, header) and renders the type's own panel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Adding a problem type
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create `lib/problems/<name>/index.ts` exporting `defineProblemType({ id, label, defaultConfig, generate, tags, layout })`.
+2. Register it in `lib/problems/registry.ts`.
+3. Add `components/quiz/panels/<Name>Panel.tsx` and register it in `components/quiz/panels/index.ts`
+   (TypeScript reports a missing panel).
+4. Add a preset in `lib/presets.ts` so it shows on the home page.
+5. Add tests next to the generator. `lib/presets.test.ts` already builds a PDF for every preset.
