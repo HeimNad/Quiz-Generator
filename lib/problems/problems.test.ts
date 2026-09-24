@@ -139,19 +139,37 @@ describe("number words", () => {
 });
 
 describe("base ten", () => {
-  const gen = (regrouping: BaseTenConfig["regrouping"]) =>
-    baseTenType.generate({ ...baseTenType.defaultConfig, count: 20, regrouping }, createRng(10));
-  const onesCarry = (a: number, b: number) => (a % 10) + (b % 10) >= 10;
+  const gen = (patch: Partial<BaseTenConfig>) =>
+    baseTenType.generate({ ...baseTenType.defaultConfig, count: 20, ...patch }, createRng(10));
 
-  it("keeps two-digit sums and follows the regrouping rule", () => {
+  it("adds with two-digit sums and follows the carrying rule", () => {
     for (const regrouping of ["without", "with"] as const) {
-      const problems = gen(regrouping);
+      const problems = gen({ operations: ["add"], regrouping });
       expect(problems).toHaveLength(20);
-      for (const { operands: [a, b], answer } of problems) {
+      for (const { op, operands: [a, b], answer } of problems) {
+        expect(op).toBe("add");
         expect(Number(answer)).toBe(a + b);
         expect(a + b).toBeLessThanOrEqual(99);
-        expect(onesCarry(a, b)).toBe(regrouping === "with");
+        expect((a % 10) + (b % 10) >= 10).toBe(regrouping === "with");
       }
     }
+  });
+
+  it("subtracts a smaller number and follows the borrowing rule", () => {
+    for (const regrouping of ["without", "with"] as const) {
+      const problems = gen({ operations: ["subtract"], regrouping });
+      expect(problems).toHaveLength(20);
+      for (const { op, operands: [a, b], answer } of problems) {
+        expect(op).toBe("subtract");
+        expect(a).toBeGreaterThan(b);
+        expect(Number(answer)).toBe(a - b);
+        expect(a % 10 < b % 10).toBe(regrouping === "with");
+      }
+    }
+  });
+
+  it("mixes operations when both are selected", () => {
+    const ops = new Set(gen({ operations: ["add", "subtract"], regrouping: "mixed" }).map((p) => p.op));
+    expect(ops).toEqual(new Set(["add", "subtract"]));
   });
 });
